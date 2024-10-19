@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Task Management System",
-  description: "Финальаный проект Проектирования и разработки распределенных программных систем",
+  description:
+    "Финальаный проект Проектирования и разработки распределенных программных систем",
 };
 
 export default function RootLayout({
@@ -13,10 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        <main>{children}</main>
       </body>
     </html>
   );
