@@ -12,6 +12,6 @@ export const users = pgTable("users", {
   password: varchar("password"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").$onUpdateFn(() => new Date()),
-  twoFactorActivated: boolean("2fa_activated"),
+  twoFactorActivated: boolean("2fa_activated").default(false),
   twoFactorSecret: varchar("2fa_secret"),
 });
