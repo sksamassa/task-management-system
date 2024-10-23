@@ -9,7 +9,7 @@ import {
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email").unique(),
-  password: varchar("email"),
+  password: varchar("password"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").$onUpdateFn(() => new Date()),
   twoFactorActivated: boolean("2fa_activated"),
