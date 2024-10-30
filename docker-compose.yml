@@ -4,6 +4,8 @@ services:
   app1:
     build:
       context: .
+    volumes:
+      - /app:/app
     env_file:
       - .env.local
     environment:
@@ -21,6 +23,8 @@ services:
   app2:
     build:
       context: .
+    volumes:
+      - /app:/app
     env_file:
       - .env.local
     environment:

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/home-top-navbar";
 
 export const metadata: Metadata = {
   title: "Task Management System",
@@ -16,7 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <Navbar />
+        <main className="md:max-w-6xl p-2 mx-auto">{children}</main>
         <Toaster />
       </body>
     </html>

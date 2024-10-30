@@ -37,8 +37,8 @@ export async function PATCH(
       .returning();
 
     // Invalidate cache
-    await redis.del("all_tasks");
-    await redis.del(`user_tasks:${updatedTask.userId}`);
+    // await redis.del("all_tasks");
+    // await redis.del(`user_tasks:${updatedTask.userId}`);
 
     return NextResponse.json({ task: updatedTask }, { status: 200 });
   } catch (_) {
@@ -50,7 +50,7 @@ export async function PATCH(
 }
 
 // Delete a task
-export async function DELETE(req: NextRequest, { params }: { params: { taskId: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { taskId: string } }) {``
   try {
     const taskId = params.taskId;
 
@@ -60,8 +60,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { taskId: s
       .returning({ taskId: tasks.id, userId: tasks.userId });
 
     // Invalidate cache
-    await redis.del("all_tasks");
-    await redis.del(`user_tasks:${deletedTask.userId}`);
+    // await redis.del("all_tasks");
+    // await redis.del(`user_tasks:${deletedTask.userId}`);
 
     return NextResponse.json({ message: "Task deleted." }, { status: 200 });
   } catch (_) {

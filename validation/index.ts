@@ -4,3 +4,4 @@ export { emailSchema } from "./emailSchema";
 export { registerSchema } from "./registerSchema";
 export { loginSchema } from "./loginSchema";
 export { changePasswordSchema } from './changePasswordSchema'
+export { createTaskSchema } from './createTaskSchema'
