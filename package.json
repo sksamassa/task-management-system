@@ -26,6 +26,7 @@
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.26.2",
     "drizzle-orm": "^0.35.3",
+    "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",
     "ioredis": "^5.4.1",
     "lucide-react": "^0.453.0",

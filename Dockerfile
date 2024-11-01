@@ -24,3 +24,4 @@ ENV NODE_ENV=production
 
 # Start the Next.js server
 CMD ["npm", "start"]
+

@@ -1,18 +1,10 @@
 import { db } from "@/db/drizzle";
-// import redis from "@/db/redis";
 import { tasks } from "@/db/schemas/tasksSchema";
 import { NextRequest, NextResponse } from "next/server";
 
-// const CACHE_EXPIRY = 60; // Cache expiry time in seconds
-
-// Create a new task
 export async function POST(req: NextRequest) {
   try {
-  
-
     const { userId, title, description } = await req.json();
-   
-   
 
     if (!title) {
       return NextResponse.json(
@@ -37,12 +29,9 @@ export async function POST(req: NextRequest) {
       })
       .returning();
 
-    // Invalidate Redis cache
-    // await redis.del('all_tasks');  // Invalidate cache for all tasks
-    // await redis.del(`user_tasks:${userId}`); // Invalidate cache for user tasks
-
     return NextResponse.json({ task: newTask }, { status: 201 });
-  } catch (_) {
+  } catch (err) {
+    console.error("Error creating task:", err);
     return NextResponse.json(
       { message: "Failed to create a task." },
       { status: 500 }
@@ -62,19 +51,26 @@ export async function GET(req: NextRequest) {
     //   return NextResponse.json({ tasks: JSON.parse(cachedTasks) }, { status: 200 });
     // }
 
-    const { searchParams } = new URL(req.url)
-    const query = searchParams.get("query")?.toLowerCase()
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get("query")?.toLowerCase();
     // If not cached, fetch from database
     const allTasks = await db.select().from(tasks);
 
     // filter tasks if a query is provided
-    const filteredTasks = query ? allTasks.filter((task) => task.title.toLowerCase().includes(query.toLowerCase()) || task?.description?.toLowerCase().includes(query.toLowerCase())) : allTasks
+    const filteredTasks = query
+      ? allTasks.filter(
+          (task) =>
+            task.title.toLowerCase().includes(query.toLowerCase()) ||
+            task?.description?.toLowerCase().includes(query.toLowerCase())
+        )
+      : allTasks;
 
     // Store the result in Redis and set an expiry time
     // await redis.set(cacheKey, JSON.stringify(allTasks), 'EX', CACHE_EXPIRY);
 
     return NextResponse.json({ tasks: filteredTasks }, { status: 200 });
-  } catch (_) {
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
     return NextResponse.json(
       { message: "Failed to retrieve tasks." },
       { status: 500 }
