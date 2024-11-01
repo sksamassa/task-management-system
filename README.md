@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project is a task management system built with Next.js, Drizzle ORM, and PostgreSQL. It provides a RESTful API for creating, reading, updating, and deleting tasks, as well as user authentication and task management features.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Deployment URL**: [final-project-rust-iota.vercel.app](https://final-project-rust-iota.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- User registration and authentication
+- Create, read, update, and delete tasks
+- Retrieve tasks by user ID
+- Caching with Redis (currently commented out for demonstration)
+- Docker support for containerization
+- Nginx for load balancing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+- Next.js 14
+- Drizzle ORM
+- PostgreSQL
+- Redis
+- Docker
+- Nginx
+- NextAuth for authentication
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This document outlines the database schema used in the application, detailing the tables and their respective fields.
 
-## Deploy on Vercel
+### Database Diagram
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Database Schema](./public/db-schemas.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Users Table
+
+The `users` table stores user information. The schema is defined as follows:
+
+| Field                | Type     | Description                                           |
+|----------------------|----------|-------------------------------------------------------|
+| `id`                 | UUID     | Primary key, automatically generated.                  |
+| `email`              | VARCHAR  | Unique email address of the user.                     |
+| `password`           | VARCHAR  | Hashed password for user authentication.               |
+| `createdAt`          | TIMESTAMP| Timestamp when the user account was created.          |
+| `updatedAt`          | TIMESTAMP| Timestamp when the user account was last updated.     |
+| `twoFactorActivated`  | BOOLEAN  | Indicates if two-factor authentication is enabled.    |
+| `twoFactorSecret`    | VARCHAR  | Secret used for two-factor authentication.             |
+
+### Password Reset Tokens Table
+
+The `password_reset_tokens` table stores tokens used for password reset requests. The schema is defined as follows:
+
+| Field                | Type     | Description                                           |
+|----------------------|----------|-------------------------------------------------------|
+| `id`                 | UUID     | Primary key, automatically generated.                  |
+| `userId`             | UUID     | Foreign key referencing the `users` table.            |
+| `token`              | VARCHAR  | Token used for password reset.                         |
+| `tokenExpiry`        | TIMESTAMP| Expiration time of the token.                          |
+| `createdAt`          | TIMESTAMP| Timestamp when the token was created.                 |
+| `updatedAt`          | TIMESTAMP| Timestamp when the token was last updated.            |
+
+### Tasks Table
+
+The `tasks` table stores tasks associated with users. The schema is defined as follows:
+
+| Field                | Type     | Description                                           |
+|----------------------|----------|-------------------------------------------------------|
+| `id`                 | UUID     | Primary key, automatically generated.                  |
+| `userId`             | UUID     | Foreign key referencing the `users` table.            |
+| `title`              | VARCHAR  | Title of the task, cannot be null.                    |
+| `description`        | VARCHAR  | Description of the task.                               |
+| `completed`          | BOOLEAN  | Indicates if the task has been completed.             |
+| `createdAt`          | TIMESTAMP| Timestamp when the task was created.                  |
+| `updatedAt`          | TIMESTAMP| Timestamp when the task was last updated.             |
+
+
+
+## API Documentation
+
+### Overview
+
+This API allows users to manage tasks with functionalities for creating, retrieving, updating, and deleting tasks. 
+
+### Base URL
+The base URL for the API is:  
+[https://final-project-rust-iota.vercel.app/api](https://final-project-rust-iota.vercel.app/api)
+
+### Authentication
+
+You need to register a user and in order to get the userId.
+
+### Endpoints
+
+### 1. User Registration
+
+- **POST** `/api/register`
+  
+### Request Body
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+
+### 2. Create Task
+
+- **POST** `/api/tasks`
+  
+### Request Body
+```json
+{
+  "userId": "uuid",
+  "title": "string",
+  "description": "string"
+}
+
+### 3. Get All Tasksn
+
+- **GET** `/api/tasks`
+  
+### 4. Get User's Tasks
+- **GET** `/api/tasks/user/[userId]`
+
+### 5. Update Task
+- **PATCH** `/api/tasks/[taskId]`
+
+### Request Body
+```json
+{
+  "title": "string",
+  "description": "string",
+  "completed": "boolean"
+}
+
+### 6. Delete Task
+- **DELETE** `/api/tasks/[taskId]`
+
+## Setup Instructions
+
+To run the project locally, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone https://gitlab.com/task-manager8423542/task-management-system.git
+   cd task-management-system
